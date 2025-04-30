@@ -10,53 +10,54 @@ namespace test6
     {
         static void Main(string[] args)
         {
-            SquareMatrix matrix = new SquareMatrix(3); // Создаем случайную матрицу 3x3
+            // Создание случайной матрицы 3x3
+            SquareMatrix matrix = new SquareMatrix(3);
             Console.WriteLine("Исходная матрица:");
             Console.WriteLine(matrix);
 
+            // Создание цепочки обязанностей
+            var sumHandler = new SumHandler();
+            var transposeHandler = new TransposeHandler();
+            var traceHandler = new TraceHandler();
+            var diagonalHandler = new DiagonalHandler();
+
+            sumHandler.SetNext(transposeHandler);
+            transposeHandler.SetNext(traceHandler);
+            traceHandler.SetNext(diagonalHandler);
+
             bool isRunning = true;
-            while (isRunning)
+
+            try
             {
-                Console.WriteLine("Выберите операцию:");
-                Console.WriteLine("0 - Сложение");
-                Console.WriteLine("1 - Умножение");
-                Console.WriteLine("2 - Транспонирование");
-                Console.WriteLine("3 - Нахождение следа");
-                Console.WriteLine("4 - Приведение к диагональному виду");
-                Console.WriteLine("5 - Выход");
-
-                if (!int.TryParse(Console.ReadLine(), out int choice) || choice < 0 || choice > 6)
+                while (isRunning)
                 {
-                    Console.WriteLine("Неверный ввод. Попробуйте снова.");
-                    continue;
-                }
+                    Console.WriteLine("Выберите операцию:");
+                    Console.WriteLine("0 - Сложение матрицы с собой");
+                    Console.WriteLine("1 - Транспонирование матрицы");
+                    Console.WriteLine("2 - Нахождение следа матрицы (сумма диагональных элементов)");
+                    Console.WriteLine("3 - Приведение матрицы к диагональному виду");
+                    Console.WriteLine("4 - Выход");
 
-                switch (choice)
-                {
-                    case 0:
-                        Console.WriteLine("Результат сложения:");
-                        Console.WriteLine(matrix + matrix);
-                        break;
-                    case 1:
-                        Console.WriteLine("Результат умножения:");
-                        Console.WriteLine(matrix * matrix);
-                        break;
-                    case 2:
-                        Console.WriteLine("Транспонированная матрица:");
-                        Console.WriteLine(matrix.GetTransposeMatrix());
-                        break;
-                    case 3:
-                        Console.WriteLine($"След матрицы: {matrix.GetMatrixTrace()}");
-                        break;
-                    case 4:
-                        Console.WriteLine("Диагональная матрица:");
-                        Console.WriteLine(MatrixOperations.ToDiagonal(matrix));
-                        break;
-                    case 5:
+                    if (!int.TryParse(Console.ReadLine(), out int choice) || choice < 0 || choice > 4)
+                    {
+                        Console.WriteLine("Неверный ввод. Попробуйте снова.");
+                        continue;
+                    }
+
+                    if (choice == 4)
+                    {
                         isRunning = false;
                         Console.WriteLine("Выход из программы.");
                         break;
+                    }
+
+                    // Обработка операции через цепочку обязанностей
+                    sumHandler.Handle(choice, matrix);
                 }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Произошла ошибка: {ex.Message}");
             }
         }
     }

@@ -3,14 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using static test6.Delegates;
 
 namespace test6
 {
     public static class MatrixExtensionMethods
     {
         // Метод транспонирования матрицы
-        public static SquareMatrix GetTransposeMatrix(this SquareMatrix matrix)
+        public static SquareMatrix GetTransposedMatrix(this SquareMatrix matrix)
         {
             SquareMatrix transposed = new SquareMatrix(matrix.Size);
             for (int row = 0; row < matrix.Size; ++row)
@@ -27,9 +26,9 @@ namespace test6
         public static int GetMatrixTrace(this SquareMatrix matrix)
         {
             int trace = 0;
-            for (int i = 0; i < matrix.Size; ++i)
+            for (int index = 0; index < matrix.Size; ++index)
             {
-                trace += matrix.Matrix[i, i];
+                trace += matrix.Matrix[index, index];
             }
             return trace;
         }
